@@ -2,9 +2,15 @@
 /* eslint-disable no-unused-vars */
 import { Error, Loader, SongCard } from "../components";
 import { genres } from "../assets/constants";
+import { useGetTopChartsQuery } from "../redux/services/shazamCore";
 
 const Discover = () => {
+  const { data, isFetching, error } = useGetTopChartsQuery();
+
   const genreTitle = "Pop";
+
+  if (isFetching) return <Loader title="Loading Songs..." />;
+  if (error) return <Error />;
   return (
     <div className="flex flex-col">
       <div className="w-full flex justify-between sm:flex-row flex-col mt-4 mb-10">
@@ -24,7 +30,7 @@ const Discover = () => {
         </select>
       </div>
       <div className="flex flex-wrap sm:justify-start justify-center gap-8">
-        {[1, 2, 3, 4, 5].map((song, i) => (
+        {data?.map((song, i) => (
           <SongCard key={song.key} song={song} i={i} />
         ))}
       </div>
